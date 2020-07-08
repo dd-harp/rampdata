@@ -1,9 +1,13 @@
 #' The fully-rooted local path to a file.
 #' @param file_id A list identifying the file.
 #' @param config A configuration from \link{data_configuration}.
+#'     If this is NULL, then a new one is read from your dotfiles.
 #' @return A fully-rooted path.
 #' @export
-local_path <- function(file_id, config) {
+local_path <- function(file_id, config = NULL) {
+  if (is.null(config)) {
+    config <- data_configuration()
+  }
   fs::path(config$LOCALDATA, project_path(file_id))
 }
 
