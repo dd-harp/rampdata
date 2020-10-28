@@ -4,12 +4,13 @@
 \alias{local_path}
 \title{The fully-rooted local path to a file.}
 \usage{
-local_path(file_id, config)
+local_path(file_id, config = NULL)
 }
 \arguments{
 \item{file_id}{A list identifying the file.}
 
-\item{config}{A configuration from \link{data_configuration}.}
+\item{config}{A configuration from \link{data_configuration}.
+If this is NULL, then a new one is read from your dotfiles.}
 }
 \value{
 A fully-rooted path.

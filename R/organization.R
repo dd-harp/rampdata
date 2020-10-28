@@ -12,7 +12,7 @@
 #' @param rproject The Rstudio project name.
 #' @return a path to use as a base path for this dataset.
 #' @export
-ramp_path <- function(stage, location, project, user, rproject, path = NULL) {
+ramp_path1 <- function(stage, location, project, user, rproject, path = NULL) {
   stopifnot(stage %in% c("input", "output", "working"))
 
   used <- list()
@@ -68,7 +68,6 @@ ramp_path <- function(stage, location, project, user, rproject, path = NULL) {
 }
 
 
-
 #' Turns a relative path into a ramp path.
 #'
 #' @param path A path relative to the base data directory.
@@ -76,7 +75,7 @@ ramp_path <- function(stage, location, project, user, rproject, path = NULL) {
 #' @examples
 #' inverse_ramp_path("users/ad") == list(stage = "working", user = "ad")
 #' @export
-inverse_ramp_path <- function(path) {
+inverse_ramp_path1 <- function(path) {
   splitted <- fs::path_split(path)[[1]]
   ramp_path <- list()
   if (splitted[1] == "inputs") {
@@ -146,5 +145,5 @@ project_path <- function(file_id) {
   for (name in names(file_id)) {
     complete[[name]] <- file_id[[name]]
   }
-  do.call(ramp_path, complete)$path
+  do.call(ramp_path1, complete)$path
 }
