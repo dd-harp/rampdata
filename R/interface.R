@@ -17,16 +17,16 @@ local_path <- function(file_id, config = NULL) {
 
 
 #' Get the configuration file and store as package global.
-cached_config <- function() {
-  config <- .rampdata.config[["config"]]
+cached_config <- function(key, builder) {
+  config <- .rampdata.config[[key]]
   if (is.null(config)) {
-    config <- data_configuration()
+    config <- builder()
     package_name <- packageName()
     if (!is.null(package_name)) {
-      .rampdata.config[["config"]] <- config
+      .rampdata.config[[key]] <- config
       assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
     } else {
-      .rampdata.config[["config"]] <<- config
+      .rampdata.config[[key]] <<- config
     }
   }
   config
@@ -135,7 +135,7 @@ add_path <- function(
 #' @export
 as.path <- function(rpath, config = NULL) {
   if (is.null(config)) {
-    config <- cached_config()
+    config <- cached_config("config", data_configuration)
   }
   if (nchar(rpath$project) > 0) {
     base <- list(config$LOCALDATA, "projects", rpath$project, rpath$stage, rpath$dataset)
