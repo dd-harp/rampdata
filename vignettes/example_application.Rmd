@@ -1,0 +1,59 @@
+---
+title: "Example Application"
+output: html_notebook
+---
+
+# Introduction
+
+This notebook shows how to use the `rampdata` package in an application.
+
+# Main
+
+## The main function
+
+We put code into packages, and one or more functions in that package
+are top-level functions. A researcher or a workflow tool will call
+those functions directly. These are main functions, and the `rampdata`
+package helps write them so that they run better on the cluster.
+
+A main function can either be called interactively, at an R command line,
+or from the command line as `R -e "function()"`, or from the command line
+as a script. In the last case, you write a script, such as
+```{r sample_script, eval = FALSE}
+gisdemog::create_uganda_cover()
+```
+I would save that single line into a file `uganda_cover.R` and run it
+from the command line with `Rscript uganda_cover.R --shapefile uganda.shp`.
+
+## The usual layout of a main function
+
+A main function function usually separates sanity-checking tasks
+and input/output tasks from the work of the function. For something
+meant to run from the command line, it might look as follows.
+```{r old_main, eval = FALSE}
+create_uganda_cover <- function(shapefile, landscape) {
+  inputs <- read_input_files(shapefile, landscape)
+  outputs <- calculate_uganda_cover(inputs$shapefile, inputs$lanscape)
+  write_outputs(outputs$cover)
+}
+create_uganda_cover_main <- do.call(create_uganda_cover, cover_parse_args(commandArgs()))
+```
+The first function is ready to call from the R command line.
+The second function is ready to call from the Bash command line
+on the cluster.
+
+## An updated version of the main function
+
+```{r updated_main, eval = FALSE}
+create_uganda_cover <- function(shapefile, landscape) {
+  rampdata::prov_begin()
+  tryCatch({
+    inputs <- read_input_files(shapefile, landscape)
+    outputs <- calculate_uganda_cover(inputs$shapefile, inputs$lanscape)
+    write_outputs(outputs$cover)
+  }, finally = {
+    rampdata::prov_end()
+  }
+}
+create_uganda_cover_main <- do.call(create_uganda_cover, cover_parse_args(commandArgs()))
+```
