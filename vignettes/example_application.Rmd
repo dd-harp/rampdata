@@ -6,6 +6,19 @@ output: html_notebook
 # Introduction
 
 This notebook shows how to use the `rampdata` package in an application.
+This package will add several features to the main function, if we
+initialize it to use those features.
+
+1. Logging that will be saved specially on the cluster.
+2. Provenance of files saved with each file and provenance of
+   the main function saved in the provenance directory beside
+   the data.
+3. All paths specified relative to the data directory that's
+   configured for each user and machine. This lets you run from
+   the cluster or from home.
+4. Input files and output files can be specified to have a
+   particular version by giving a workflow configuration file.
+
 
 # Main
 
@@ -55,5 +68,51 @@ create_uganda_cover <- function(shapefile, landscape) {
     rampdata::prov_end()
   }
 }
-create_uganda_cover_main <- do.call(create_uganda_cover, cover_parse_args(commandArgs()))
+create_uganda_cover_main <- function() {
+  do.call(create_uganda_cover, cover_parse_args(commandArgs()))
+}
 ```
+
+
+# Argument parsing and initialization
+
+When we parse arguments to the code, we need to initialize
+
+1. Logging - Tell it whether we are on the cluster or
+   on a local machine. When on the cluster, warnings, errors,
+   and fatal messages will be saved to a separate file.
+   We can also change the logging level for the whole
+   application or for particular packages or R scripts.
+   
+2. Workflow versions - This is a file with lists of versions
+   and the file paths they affect.
+
+The location of the data directory is initialized as needed
+from a configuration file in the home directory.
+
+```{r options_parsing}
+.cover.doc <- 'Create Uganda Coverage
+
+Usage:
+  create_uganda_coverage <workflow> [-v] [-q] [--local]
+
+Options:
+  -v       Set logging to debug level.
+  -q       Set logging to warn level.
+  --local  Working on a local machine, not the cluster.
+'
+cover_parse_args <- function(args = NULL) {
+  if (is.null(args)) {
+    args <- commandArgs(TRUE)
+  }
+  parsed <- docopt::docopt(.cover.doc, args = args, version = "1.0")
+  
+  calling_function <- deparse(sys.call(sys.parent(n = 1)))
+  set_logging_from_args(
+    packageName(), calling_function, parsed$v, parsed$q, parsed$local
+    )
+  initialize_workflow(args$workflow)
+}
+```
+
+

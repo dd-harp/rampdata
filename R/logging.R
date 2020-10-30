@@ -67,10 +67,9 @@ local_logging <- function(level_name = "info") {
 #' a file.
 #'
 #' @export
-cluster_logging <- function(level_name = "info", error_directory = NULL) {
-  error_file <- format(Sys.time(), "%Y%m%d-%H%M%S.txt")
-  if (!is.null(error_directory)) {
-    error_file <- file.path(error_directory, error_file)
+cluster_logging <- function(level_name = "info", error_file = NULL) {
+  if (!is.null(error_file)) {
+    error_file <- format(Sys.time(), "%Y%m%d-%H%M%S.txt")
   }
   futile.logger::flog.logger(
     .baseLogger,
@@ -83,6 +82,19 @@ cluster_logging <- function(level_name = "info", error_directory = NULL) {
     appender = appender.file(error_file),
     layout = futile.logger::layout.format('~l [~t] ~n:~f ~m')
     )
+}
+
+
+set_logging_from_args <- function(package_name, function_name, vflag, qflag, localflag) {
+  level_name <- names(.name_to_level)[3 + sum(c(-vflag, qflag))]
+  if (localflag) {
+    local_logging(level_name)
+  } else {
+    if (is.null(package_name)) {
+      package_name <- unname(Sys.info()["user"])
+    }
+    cluster_logging(level_name, ramp_log_path(package_name, function_name))
+  }
 }
 
 

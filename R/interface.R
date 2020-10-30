@@ -152,6 +152,26 @@ as.path <- function(rpath, config = NULL) {
 }
 
 
+ramp_special_path <- function(package_name, function_name, kind, ext) {
+  base_path <- cached_config("config", data_configuration)$LOCALDATA
+  when <- format(ps::ps_create_time(ps::ps_handle()), "%y%m%d_%H%M")
+  hostname <- unname(tolower(Sys.info()["nodename"]))
+  bits <- strtrim(openssl::sha256(Sys.info())[1], 6)
+  filename <- paste0(when, bits, hostname, ext)
+  file.path(base_path, kind, package_name, function_name, filename)
+}
+
+
+ramp_log_path <- function(package_name, function_name) {
+  ramp_special_path(package_name, function_name, "log", ".txt")
+}
+
+
+ramp_prov_path <- function(package_name, function_name) {
+  ramp_special_path(package_name, function_name, "prov", ".toml")
+}
+
+#
 #' Save information about a directory or data file.
 #'
 #' If you give it a directory, it saves a file in the directory.
