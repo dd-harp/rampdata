@@ -3,8 +3,11 @@ LABEL Name=rampdata Version=0.0.1
 
 RUN apt-get install -y \
     fortunes \
-    libssh-dev
+    libssh-dev \
+    littler
 
-RUN R -e 'install.packages("renv")'
+RUN R -e "devtools::install_github('REditorSupport/languageserver', force = TRUE)" && \
+    install2.r \
+      renv
 
 CMD ["sh", "-c", "/usr/games/fortune -a | cowsay"]

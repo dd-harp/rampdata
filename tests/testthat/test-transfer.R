@@ -1,4 +1,5 @@
 test_that("transfer finds initialization", {
+  skip("not using ssh now")
   xdg_home <- fs::path(base::tempdir(), "xdg")
   dir.create(fs::path(xdg_home, "RAMP"), recursive = TRUE, showWarnings = FALSE)
   cat(
@@ -21,6 +22,7 @@ test_that("transfer finds initialization", {
 
 
 test_that("local file goes there and back", {
+  skip("not using ssh now")
   # Set up the test file.
   test_config <- rampdata::data_configuration("Test")
   test_file_relative <- fs::path("working", "goes.txt")
@@ -54,6 +56,7 @@ test_that("local file goes there and back", {
 
 
 test_that("overwrite raises an error", {
+  skip("not using ssh now")
   # Set up the test file.
   test_config <- rampdata::data_configuration("Test")
   test_file_relative <- fs::path("overwrite", "overwrite.txt")
