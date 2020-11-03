@@ -1,3 +1,24 @@
+testing_config <- list(LOCALDATA = "/rooted")
+test_that("ramp path recognizes parts", {
+  expect_equal(as.path(ramp_path("/proj/stage/dataset/version/sub/file"), config = testing_config),
+               "/rooted/projects/proj/stage/dataset/version/sub/file")
+  expect_equal(as.path(ramp_path("/proj/stage/dataset/version"), config = testing_config),
+               "/rooted/projects/proj/stage/dataset/version")
+  expect_equal(as.path(ramp_path("/proj/stage/dataset"), config = testing_config),
+               "/rooted/projects/proj/stage/dataset")
+})
+
+
+test_that("ramp path can modify an rpath", {
+  rp <- ramp_path()
+  rp2 <- add_path(rp, dataset = "violet")
+  rp2 <- add_path(rp2, project = "uga", stage = "mic")
+  expect_equal(as.path(rp2, testing_config), "/rooted/projects/uga/mic/violet")
+  rp3 <- add_path(rp2, file = "blah.csv", version = "23")
+  expect_equal(as.path(rp3, testing_config), "/rooted/projects/uga/mic/violet/23/blah.csv")
+})
+
+
 test_list <- function(trials) {
   for (idx in 1:length(trials)) {
     trial <- trials[[idx]]
@@ -6,7 +27,7 @@ test_list <- function(trials) {
     test_that(trial_name, {
       had_error <- FALSE
       pp <- tryCatch({
-        ramp_path(
+        ramp_path1(
           stage = trial[["stage"]], location = NULL, project = trial[["project"]],
           user = trial[["user"]], rproject = trial[["rproject"]]
           )
@@ -35,7 +56,7 @@ test_inverse_list <- function(trials) {
     test_that(trial_name, {
       had_error <- FALSE
       pp <- tryCatch({
-        inverse_ramp_path(trial[["result"]])
+        inverse_ramp_path1(trial[["result"]])
       }, error = function(e) had_error <<- TRUE
       )
       expect_false(had_error)

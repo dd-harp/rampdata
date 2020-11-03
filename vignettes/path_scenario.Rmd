@@ -1,0 +1,70 @@
+---
+title: "Path Interface"
+output: html_notebook
+---
+
+## Introduction
+I need to make an interface to set a path for RAMP. The first goal of the
+path handling is to give our files a common structure that we
+recognize for searching and file management. The second goal is to make
+that structure have a root directory that we can change on the cluster
+or can set for local compuation on desktops.
+
+
+## Alternatives
+
+The first version of an interface asked the user to pass in a list.
+```{r first_version, eval = FALSE}
+dest <- local_path(
+  list(stage = "output", project = "uganda2020", dataset = "district_age2")
+)
+```
+
+That seems like using named arguments, but with extra steps.
+
+The options are the following. Use paths.
+```{r paths_version, eval = FALSE}
+dest <- local_path("/uganda2020/output/district_age2/1")
+```
+Use arguments.
+```{r args_version, eval = FALSE}
+dest <- local_path(
+  stage = "output", project = "uganda2020", dataset = "district_age2", version = "1"
+)
+```
+Use paths with replacement.
+```{r replace_version, eval = FALSE}
+dest <- local_path("/uganda2020/output/district_age2/$version")
+```
+
+## Scenarios
+After using this path for a while, these are some things that I noted
+I wanted to do.
+
+Give me that file.
+```{r that_file, eval = FALSE}
+filename <- local_path("/uganda2020/output/district_age2/1/pop_2000.csv")
+```
+
+Give me a root directory to ensure it exists.
+```{r rooted, eval = FALSE}
+dest <- local_path("/uganda2020/output/district_age2/1")
+if (!dir.exists(dest)) dir.create(dest)
+filename <- file.path(dest, paste0("pop_", year, ".csv"))
+```
+
+The Python FBDPath we used for the Forecasting Burden of Disease
+group had a nice feature that would look like this:
+```{r add_path, eval = FALSE}
+dest <- local_path(project = "uganda2020")
+dest <- add_path(dest, stage = "mic", version = "3")
+dest <- add_path(dest, dataset = "density", file = "file_2000.csv")
+```
+That was added by people who used the parsed path a lot, so it's
+likely a helpful feature. The trouble is that there
+isn't a strong conversion capability in R. We could make a sensible
+conversion.
+```{r as_path, eval = FALSE}
+read.csv(as.path(dest))
+```
+
