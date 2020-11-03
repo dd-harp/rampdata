@@ -41,4 +41,5 @@
 #'
 #' @docType package
 #' @name rampdata
+#' @import futile.logger
 NULL

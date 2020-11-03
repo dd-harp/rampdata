@@ -6,7 +6,8 @@ test_that("workflow can read", {
   value <- tryCatch({
     cat(text, file = fn)
     initialize_workflow(fn)
-    # workflow_path("admin1pop")
+    # Here we ask for the rpath to the role.
+    workflow_path("admin1pop")
   }, finally = {
     file.remove(fn)
   })

@@ -19,6 +19,10 @@ initialize it to use those features.
 4. Input files and output files can be specified to have a
    particular version by giving a workflow configuration file.
 
+When you read this, please consider first, not the syntax,
+but whether this would fit with the flow of how you work.
+We can make the syntax easier and more automatic if it can first
+ensure it doesn't preclude how you work.
 
 # Main
 
@@ -41,8 +45,13 @@ from the command line with `Rscript uganda_cover.R --shapefile uganda.shp`.
 ## The usual layout of a main function
 
 A main function function usually separates sanity-checking tasks
-and input/output tasks from the work of the function. For something
-meant to run from the command line, it might look as follows.
+and input/output tasks from the work of the function. We try to
+write the main function so that it can be called as a script,
+meaning called from `R --no-save -e "package::runit()"` or so
+it can be called as a function from the R prompt.
+We can write the function and wrap it to be called as a script
+in these two steps, where the second one processes command-line
+arguments.
 ```{r old_main, eval = FALSE}
 create_uganda_cover <- function(shapefile, landscape) {
   inputs <- read_input_files(shapefile, landscape)
@@ -55,17 +64,36 @@ The first function is ready to call from the R command line.
 The second function is ready to call from the Bash command line
 on the cluster.
 
+## A main function as a script
+
+Sometimes we write scripts. They aren't different from main functions
+in any way that's important for the rampdata additions.
+
+```{r script_main, eval = FALSE}
+args <- do.call(create_uganda_cover, cover_parse_args(commandArgs(trailing = TRUE)))
+inputs <- read_input_files(args$shapefile, args$landscape)
+outputs <- calculate_uganda_cover(inputs$shapefile, inputs$lanscape)
+write_outputs(outputs$cover)
+```
+
 ## An updated version of the main function
+
+Most of the new work in the main function will be done
+while parsing arguments. The one important piece to add
+is a `tryCatch` around the work of the main function. The goal
+is to clear the slate for provenance and ensure we save it at
+the end.
 
 ```{r updated_main, eval = FALSE}
 create_uganda_cover <- function(shapefile, landscape) {
-  rampdata::prov_begin()
+  rampdata::clear.provenance()
   tryCatch({
     inputs <- read_input_files(shapefile, landscape)
     outputs <- calculate_uganda_cover(inputs$shapefile, inputs$lanscape)
     write_outputs(outputs$cover)
   }, finally = {
-    rampdata::prov_end()
+    rampdata::write.meta.data(
+      rampdata::ramp_prov_path("package", "create_uganda_cover"))
   }
 }
 create_uganda_cover_main <- function() {
@@ -73,6 +101,8 @@ create_uganda_cover_main <- function() {
 }
 ```
 
+The provenance recording isn't nested. Clearing it will delete
+everything this package remembers.
 
 # Argument parsing and initialization
 
@@ -115,4 +145,26 @@ cover_parse_args <- function(args = NULL) {
 }
 ```
 
+# File provenance along the way
 
+Each time we read or write a file, we record its provenance.
+There is an incantation when we read. We can shorten these lines
+of code if we determine they do what we want.
+```{r record_file, eval = FALSE}
+pop_rp <- workflow_path("admin1pop")
+file_rp <- add_path(pop_rp, file = "pop2000.csv")
+dt <- data.table::fread(as.path(file_rp))
+prov.input.file(as.path(file_rp), "admin1pop")
+```
+When we write, we add a step to save the current provenance
+of how the file was made. If we write a file called
+`output.csv`, then we should write its provenance beside
+it as `output.toml`.
+```{r record_write, eval = FALSE}
+pop_rp <- workflow_path("admin1pop")
+file_rp <- add_path(pop_rp, file = "pop2000.csv")
+dt <- data.table::fwrite(as.path(file_rp))
+prov.output.file(as.path(file_rp), "admin1pop")
+write.meta.data(
+      as.path(add_path(file_rp, file = "pop2000.toml")))
+```

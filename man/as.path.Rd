@@ -4,10 +4,12 @@
 \alias{as.path}
 \title{Convert a ramp path into a simple string filename for reading or writing.}
 \usage{
-as.path(rpath)
+as.path(rpath, config = NULL)
 }
 \arguments{
 \item{rpath}{A ramp path.}
+
+\item{config}{If you want to set a configuration, this is it.}
 }
 \value{
 A character string.

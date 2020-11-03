@@ -4,7 +4,7 @@
 \alias{cached_config}
 \title{Get the configuration file and store as package global.}
 \usage{
-cached_config()
+cached_config(key, builder)
 }
 \description{
 Get the configuration file and store as package global.
