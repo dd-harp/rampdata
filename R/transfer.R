@@ -32,15 +32,23 @@ data_configuration <- function(section = "Default") {
     default = fs::path("", "home", Sys.info()[["effective_user"]], ".ramp.ini")
   )
 
+  found_ini <- character(0)
   for (ini_path in home) {
     if (file.exists(ini_path)) {
       cfg <- configr::read.config(ini_path)
       if (is.list(cfg)) {
         return(cfg[[section]])
       }
+      found_ini <- c(found_ini, ini_path)
     }
   }
-  FALSE
+  if (length(found_ini) > 0) {
+    logerror(paste("Found data.ini but could not load", paste(found_ini, collapse = ", ")))
+  } else {
+    logerror(paste("Could not find data directory because could not",
+        "find data.ini in", paste(home, collapse = ", ")))
+  }
+  NULL
 }
 
 

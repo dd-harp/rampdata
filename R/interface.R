@@ -125,6 +125,27 @@ add_path <- function(
 }
 
 
+#' Return a path as a logical filename, which is a relative path.
+#' @param rpath A RAMP path.
+#' @return A string with forward-slashes separating parts of the filename.
+#' @export
+as.lfn <- function(rpath) {
+  names <- c("project", "stage", "dataset", "version", "file")
+  rp_str <- as.character(rpath[names])
+  for (last_nz in length(rp_str):1) {
+    if (nzchar(rp_str[last_nz])) {
+      break
+    }
+  }
+  rp_str <- rp_str[1:last_nz]
+  if (nzchar(rp_str[1])) {
+    paste(c("", rp_str), collapse = "/")
+  } else {
+    paste(rp_str, collapse = "/")
+  }
+}
+
+
 #' Convert a ramp path into a simple string filename for reading or writing.
 #' @param rpath A ramp path.
 #' @param config If you want to set a configuration, this is it.
@@ -136,6 +157,10 @@ add_path <- function(
 as.path <- function(rpath, config = NULL) {
   if (is.null(config)) {
     config <- cached_config("config", data_configuration)
+  }
+  if (is.null(config)) {
+    logerror(paste("Cannot convert", rpath, "to path without a data.ini"))
+    return(NULL)
   }
   if (nchar(rpath$project) > 0) {
     base <- list(config$LOCALDATA, "projects", rpath$project, rpath$stage, rpath$dataset)

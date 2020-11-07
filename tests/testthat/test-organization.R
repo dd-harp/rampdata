@@ -19,6 +19,16 @@ test_that("ramp path can modify an rpath", {
 })
 
 
+test_that("as.lfn gives expected strings", {
+  rp <- ramp_path("/globalrc/inputs/pr2ar/201103")
+  expect_equal(as.lfn(rp), "/globalrc/inputs/pr2ar/201103")
+  rp2 <- add_path(rp, file = "myfile.csv")
+  expect_equal(as.lfn(rp2), "/globalrc/inputs/pr2ar/201103/myfile.csv")
+  rp3 <- add_path(rp, project = "")
+  expect_equal(as.lfn(rp3), "/inputs/pr2ar/201103")
+})
+
+
 test_list <- function(trials) {
   for (idx in 1:length(trials)) {
     trial <- trials[[idx]]
