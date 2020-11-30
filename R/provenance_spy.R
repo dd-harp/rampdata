@@ -203,8 +203,8 @@ get.metadata <- function(path) {
 
 
 #' Return extra metadata associated with .shp file
-#' 
-#' @path The path to the shapefile.
+#'
+#' @param path The path to the shapefile.
 #' @return A list of properties of that data, taken from the file.
 #'
 #' A "shapefile" is actually a collection of files. At minimum .shp, .shpx, and .dbf
