@@ -16,13 +16,12 @@ utils::globalVariables("data_config", package = "rampdata")
 #'   to create a \code{Test} section to use for non-destructive testing.
 #' @return A list of configuration parameters.
 #'
-#' @examples
-#' \dontrun{
+#' ```
 #' [Default]
 #' SCPHOST = computer-name.ihme.uw.edu
 #' SCPHOSTBASE = /path/to/data/directory
 #' LOCALDATA = /home/username/data
-#' }
+#' ```
 #'
 #' @export
 data_configuration <- function(section = "Default") {
@@ -62,7 +61,7 @@ data_configuration <- function(section = "Default") {
 #'
 #' @param session An ssh session.
 #' @param filename The path of the file within the repository.
-#' @param local_directory Where to put that file on the local machine.
+#' @param data_configuration Where to put that file on the local machine.
 #' @export
 get_from_ihme <- function(session, filename, data_configuration = NULL) {
   if (is.null(data_configuration)) {
@@ -89,7 +88,7 @@ get_from_ihme <- function(session, filename, data_configuration = NULL) {
 #' @param session An ssh session.
 #' @param filename The path of the file within the repository.
 #' @param overwrite Whether it is OK to overwrite the destination file.
-#' @param local_directory Where to put that file on the local machine.
+#' @param data_configuration Where to put that file on the local machine.
 #' @export
 send_to_ihme <- function(session, filename, overwrite = TRUE, data_configuration = NULL) {
   if (is.null(data_configuration)) {
@@ -131,7 +130,7 @@ send_to_ihme <- function(session, filename, overwrite = TRUE, data_configuration
 #' 10 or 15 is 2010 or 2015 data.
 #' adjv2 or v2 is whether it was adjusted to match WHO.
 #' So use GNQ15v2.tif.
-#' @param local directory Where to put that file on the local machine.
+#' @param local_directory directory Where to put that file on the local machine.
 #' @param overwrite Whether to overwrite an existing file by the same name.
 #' @export
 download_worldpop <- function(local_directory = "inst/extdata", overwrite = FALSE) {
@@ -158,7 +157,7 @@ download_worldpop <- function(local_directory = "inst/extdata", overwrite = FALS
 #' The 100m grids are secs.shp and the 1km are mapareas.shp.
 #' The two grids align in this projection.
 #' @param session An ssh session object.
-#' @param local directory Where to put that file on the local machine.
+#' @param local_directory directory Where to put that file on the local machine.
 #' @export
 download_bioko_grids <- function(session, local_directory = "inst/extdata") {
   filename <- "Bioko_grids.zip"
@@ -170,5 +169,5 @@ download_bioko_grids <- function(session, local_directory = "inst/extdata") {
   if (!dir.exists(destination_directory)) {
     dir.create(destination_directory)
   }
-  unzip(local_path, exdir = destination_directory)
+  utils::unzip(local_path, exdir = destination_directory)
 }

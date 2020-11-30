@@ -7,7 +7,7 @@
 
 #' This is the namespace in which all logging messages
 #' are placed, so that they can be controlled as a group.
-.baseLogger <- ifelse(is.null(packageName()), "rampdata", packageName())
+.baseLogger <- ifelse(is.null(utils::packageName()), "rampdata", utils::packageName())
 #' Create a child namespace that also logs errors to a file.
 .errorLogger <- paste0(.baseLogger, ".err")
 
@@ -56,8 +56,8 @@ local_logging <- function(level_name = "info") {
 #' Set up logging for running on the cluster.
 #' @param level_name One of the strings (trace, debug, info, warn, error, fatal)
 #'     Default value is "info".
-#' @param error_directory The directory into which to put the error file.
-#'     The error file will be named with the current date and time.
+#' @param error_file The name of the file. If NULL,
+#'     the error file will be named with the current date and time.
 #'
 #' This sets logging so that warnings and above go to a file that is
 #' named by the date and time, but all else goes to standard out.
@@ -112,8 +112,8 @@ set_logging_from_args <- function(package_name, function_name, vflag, qflag, loc
 #' @export
 log_module <- function(module, level_name = "debug") {
   level <- string_log_level(level_name)
-  futile.logger::threshold(level, name = paste0(.baseLogger, ".", module))
-  futile.logger::threshold(level, name = paste0(.errorLogger, ".", module))
+  futile.logger::flog.threshold(level, name = paste0(.baseLogger, ".", module))
+  futile.logger::flog.threshold(level, name = paste0(.errorLogger, ".", module))
 }
 
 

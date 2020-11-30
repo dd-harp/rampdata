@@ -9,7 +9,7 @@ download_bioko_grids(session, local_directory = "inst/extdata")
 \arguments{
 \item{session}{An ssh session object.}
 
-\item{local}{directory Where to put that file on the local machine.}
+\item{local_directory}{directory Where to put that file on the local machine.}
 }
 \description{
 This is an example of what we have to do in order to transfer

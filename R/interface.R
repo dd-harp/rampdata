@@ -17,14 +17,17 @@ local_path <- function(file_id, config = NULL) {
 
 
 #' Get the configuration file and store as package global.
+#' @param key The name of the section.
+#' @param builder A function that creates a config. It takes no arguments.
+#' @return A list of configuration values.
 cached_config <- function(key, builder) {
   config <- .rampdata.config[[key]]
   if (is.null(config)) {
     config <- builder()
-    package_name <- packageName()
+    package_name <- utils::packageName()
     if (!is.null(package_name)) {
       .rampdata.config[[key]] <- config
-      assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
+      utils::assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
     } else {
       .rampdata.config[[key]] <<- config
     }

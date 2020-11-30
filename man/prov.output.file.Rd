@@ -7,9 +7,9 @@
 prov.output.file(output, role)
 }
 \arguments{
-\item{role}{A string to identify what this file does for this program.}
+\item{output}{The filename of the output file.}
 
-\item{input}{The filename of the output file.}
+\item{role}{A string to identify what this file does for this program.}
 }
 \description{
 Record that this code used this output file.

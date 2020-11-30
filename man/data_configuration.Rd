@@ -13,6 +13,13 @@ to create a \code{Test} section to use for non-destructive testing.}
 }
 \value{
 A list of configuration parameters.
+
+```
+[Default]
+SCPHOST = computer-name.ihme.uw.edu
+SCPHOSTBASE = /path/to/data/directory
+LOCALDATA = /home/username/data
+```
 }
 \description{
 If you want to make the config file, then create
@@ -24,13 +31,4 @@ a file in one of three places:
 - \code{$HOME/.ramp.ini}
 
 Put the following in it.
-}
-\examples{
-\dontrun{
-[Default]
-SCPHOST = computer-name.ihme.uw.edu
-SCPHOSTBASE = /path/to/data/directory
-LOCALDATA = /home/username/data
-}
-
 }

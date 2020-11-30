@@ -6,6 +6,14 @@
 \usage{
 cached_config(key, builder)
 }
+\arguments{
+\item{key}{The name of the section.}
+
+\item{builder}{A function that creates a config. It takes no arguments.}
+}
+\value{
+A list of configuration values.
+}
 \description{
 Get the configuration file and store as package global.
 }

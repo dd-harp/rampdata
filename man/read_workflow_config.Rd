@@ -6,6 +6,12 @@
 \usage{
 read_workflow_config(filename)
 }
+\arguments{
+\item{filename}{The path to the config file to read.}
+}
+\value{
+A list of config information from `configr`.
+}
 \description{
 Read a workflow description file.
 }

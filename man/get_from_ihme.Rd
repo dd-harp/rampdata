@@ -11,7 +11,7 @@ get_from_ihme(session, filename, data_configuration = NULL)
 
 \item{filename}{The path of the file within the repository.}
 
-\item{local_directory}{Where to put that file on the local machine.}
+\item{data_configuration}{Where to put that file on the local machine.}
 }
 \description{
 Only if you have ssh credentials set up.

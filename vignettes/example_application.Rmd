@@ -139,7 +139,7 @@ cover_parse_args <- function(args = NULL) {
   
   calling_function <- deparse(sys.call(sys.parent(n = 1)))
   set_logging_from_args(
-    packageName(), calling_function, parsed$v, parsed$q, parsed$local
+    utils::packageName(), calling_function, parsed$v, parsed$q, parsed$local
     )
   initialize_workflow(args$workflow)
 }
