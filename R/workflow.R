@@ -19,10 +19,10 @@ read_workflow_config <- function(filename) {
 initialize_workflow <- function(filename) {
   config <- read_workflow_config(filename)
   key <- "workflow"
-  package_name <- packageName()
+  package_name <- utils::packageName()
   if (!is.null(package_name)) {
     .rampdata.config[[key]] <- config
-    assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
+    utils::assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
   } else {
     .rampdata.config[[key]] <<- config
   }

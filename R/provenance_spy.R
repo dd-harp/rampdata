@@ -37,7 +37,7 @@
 get.input.files <- function(clear = FALSE) {
   result <- .input.files
   if (clear) {
-    assignInNamespace(".input.files", list(), ns = utils::packageName())
+    utils::assignInNamespace(".input.files", list(), ns = utils::packageName())
   }
   return(result)
 }
@@ -50,7 +50,7 @@ get.input.files <- function(clear = FALSE) {
 get.output.files <- function(clear = FALSE) {
   result <- .output.files
   if (clear) {
-    assignInNamespace(".output.files", list(), ns = utils::packageName())
+    utils::assignInNamespace(".output.files", list(), ns = utils::packageName())
   }
   return(result)
 }
@@ -286,7 +286,7 @@ get.metadata <- function(path) {
   # getNamespace("PKGNAME") returns a namespace of all package contents
   this.ns <- getNamespace(utils::packageName())
   for (method in methods) {
-    spy.method <- get(sprintf(".spy.on.%s", method), env = this.ns)
+    spy.method <- get(sprintf(".spy.on.%s", method), envir = this.ns)
     assign(method, spy.method, envir = globalenv())
   }
 }

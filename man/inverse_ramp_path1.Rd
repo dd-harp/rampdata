@@ -15,6 +15,3 @@ A list that is a ramp path.
 \description{
 Turns a relative path into a ramp path.
 }
-\examples{
-inverse_ramp_path1("users/ad") == list(stage = "working", user = "ad")
-}

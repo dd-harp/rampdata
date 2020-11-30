@@ -24,10 +24,10 @@ cached_config <- function(key, builder) {
   config <- .rampdata.config[[key]]
   if (is.null(config)) {
     config <- builder()
-    package_name <- packageName()
+    package_name <- utils::packageName()
     if (!is.null(package_name)) {
       .rampdata.config[[key]] <- config
-      assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
+      utils::assignInNamespace(".rampdata.config", .rampdata.config, ns = package_name)
     } else {
       .rampdata.config[[key]] <<- config
     }

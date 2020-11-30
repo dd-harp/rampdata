@@ -7,7 +7,7 @@
 
 #' This is the namespace in which all logging messages
 #' are placed, so that they can be controlled as a group.
-.baseLogger <- ifelse(is.null(packageName()), "rampdata", packageName())
+.baseLogger <- ifelse(is.null(utils::packageName()), "rampdata", utils::packageName())
 #' Create a child namespace that also logs errors to a file.
 .errorLogger <- paste0(.baseLogger, ".err")
 
@@ -112,8 +112,8 @@ set_logging_from_args <- function(package_name, function_name, vflag, qflag, loc
 #' @export
 log_module <- function(module, level_name = "debug") {
   level <- string_log_level(level_name)
-  futile.logger::threshold(level, name = paste0(.baseLogger, ".", module))
-  futile.logger::threshold(level, name = paste0(.errorLogger, ".", module))
+  futile.logger::flog.threshold(level, name = paste0(.baseLogger, ".", module))
+  futile.logger::flog.threshold(level, name = paste0(.errorLogger, ".", module))
 }
 
 

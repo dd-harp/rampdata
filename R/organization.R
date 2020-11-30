@@ -73,8 +73,6 @@ ramp_path1 <- function(stage, location, project, user, rproject, path = NULL) {
 #'
 #' @param path A path relative to the base data directory.
 #' @return A list that is a ramp path.
-#' @examples
-#' inverse_ramp_path1("users/ad") == list(stage = "working", user = "ad")
 #' @export
 inverse_ramp_path1 <- function(path) {
   splitted <- fs::path_split(path)[[1]]
