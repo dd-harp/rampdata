@@ -56,8 +56,8 @@ local_logging <- function(level_name = "info") {
 #' Set up logging for running on the cluster.
 #' @param level_name One of the strings (trace, debug, info, warn, error, fatal)
 #'     Default value is "info".
-#' @param error_directory The directory into which to put the error file.
-#'     The error file will be named with the current date and time.
+#' @param error_file The name of the file. If NULL,
+#'     the error file will be named with the current date and time.
 #'
 #' This sets logging so that warnings and above go to a file that is
 #' named by the date and time, but all else goes to standard out.

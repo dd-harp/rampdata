@@ -17,6 +17,8 @@ Can be NULL.}
 \item{user}{The username for the person's working directory.}
 
 \item{rproject}{The Rstudio project name.}
+
+\item{path}{An optional file path within the directory.}
 }
 \value{
 a path to use as a base path for this dataset.

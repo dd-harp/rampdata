@@ -6,6 +6,13 @@
 \usage{
 get.metadata(path)
 }
+\arguments{
+\item{path}{The path to the file from which to get file info.}
+}
+\value{
+a list of file info containing creation time, last modified,
+    and its path.
+}
 \description{
 Returns metadata for a file
 }

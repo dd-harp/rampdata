@@ -1,4 +1,6 @@
 #' Read a workflow description file.
+#' @param filename The path to the config file to read.
+#' @return A list of config information from `configr`.
 read_workflow_config <- function(filename) {
   first_pass <- configr::read.config(filename)
   if ("versions" %in% names(first_pass)) {

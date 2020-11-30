@@ -7,9 +7,9 @@
 download_worldpop(local_directory = "inst/extdata", overwrite = FALSE)
 }
 \arguments{
-\item{overwrite}{Whether to overwrite an existing file by the same name.}
+\item{local_directory}{directory Where to put that file on the local machine.}
 
-\item{local}{directory Where to put that file on the local machine.}
+\item{overwrite}{Whether to overwrite an existing file by the same name.}
 }
 \description{
 This is an example of a dataset that can be retrieved with Curl

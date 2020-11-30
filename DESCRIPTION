@@ -1,6 +1,6 @@
 Package: rampdata
 Type: Package
-Title: Finds data and places data for the RAMP project.
+Title: Finds data and places data for the RAMP project
 Version: 0.1.0
 Author: adolgert@uw.edu
 Maintainer: Drew Dolgert <adolgert@uw.edu>
@@ -13,8 +13,16 @@ License: MIT 2.0
 Encoding: UTF-8
 LazyData: true
 Imports:
-    curl
+    configr,
+    data.table,
+    fs,
+    futile.logger
 RoxygenNote: 7.1.1
-Suggests: 
+Suggests:
+    maptools,
+    openssl,
+    ps,
+    readxl,
+    curl,
     ssh,
     testthat (>= 2.1.0)

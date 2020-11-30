@@ -6,6 +6,9 @@
 \usage{
 .replace.methods.with.spy(methods)
 }
+\arguments{
+\item{methods}{These are names of functions to replace.}
+}
 \description{
 Replace methods in global namespace with the spying methods defined below
 }

@@ -7,10 +7,10 @@
 .append.input.file <- function(metadata) {
   artifact_hash <- openssl::sha256(paste(unlist(metadata), collapse = ""))
   # we need to re-assign this due to how the package value (which is not a global value) is managed by R
-  package_name <- packageName()
+  package_name <- utils::packageName()
   if (!is.null(package_name)) {
     .input.files[[artifact_hash]] <- metadata
-    assignInNamespace(".input.files", .input.files, ns = package_name)
+    utils::assignInNamespace(".input.files", .input.files, ns = package_name)
   } else {
     .input.files[[artifact_hash]] <<- metadata
   }
@@ -20,10 +20,10 @@
 .append.output.file <- function(metadata) {
   artifact_hash <- openssl::sha256(paste(unlist(metadata), collapse = ""))
   # we need to re-assign this due to how the package value (which is not a global value) is managed by R
-  package_name <- packageName()
+  package_name <- utils::packageName()
   if (!is.null(package_name)) {
     .output.files[[artifact_hash]] <- metadata
-    assignInNamespace(".output.files", .output.files, ns = package_name)
+    utils::assignInNamespace(".output.files", .output.files, ns = package_name)
   } else {
     .output.files[[artifact_hash]] <<- metadata
   }
@@ -37,7 +37,7 @@
 get.input.files <- function(clear = FALSE) {
   result <- .input.files
   if (clear) {
-    assignInNamespace(".input.files", list(), ns = packageName())
+    assignInNamespace(".input.files", list(), ns = utils::packageName())
   }
   return(result)
 }
@@ -50,7 +50,7 @@ get.input.files <- function(clear = FALSE) {
 get.output.files <- function(clear = FALSE) {
   result <- .output.files
   if (clear) {
-    assignInNamespace(".output.files", list(), ns = packageName())
+    assignInNamespace(".output.files", list(), ns = utils::packageName())
   }
   return(result)
 }
@@ -92,7 +92,7 @@ prov.input.file <- function(input, role) {
 
 
 #' Record that this code used this output file.
-#' @param input The filename of the output file.
+#' @param output The filename of the output file.
 #' @param role A string to identify what this file does for this program.
 #' @export
 prov.output.file <- function(output, role) {
@@ -168,6 +168,9 @@ write.meta.data <- function(path) {
 }
 
 #' Returns metadata for a file
+#' @param path The path to the file from which to get file info.
+#' @return a list of file info containing creation time, last modified,
+#'     and its path.
 get.metadata <- function(path) {
   path <- normalizePath(path)
 
@@ -200,6 +203,9 @@ get.metadata <- function(path) {
 
 
 #' Return extra metadata associated with .shp file
+#' 
+#' @path The path to the shapefile.
+#' @return A list of properties of that data, taken from the file.
 #'
 #' A "shapefile" is actually a collection of files. At minimum .shp, .shpx, and .dbf
 #'
@@ -210,7 +216,7 @@ get.metadata <- function(path) {
   # NOTE: we're being lazy and just grabbing everything that has the same prefix.
 
   # split on "."; unlist the result into a vector; take all but the last element, re-join with "."
-  base <- paste(head(unlist(strsplit(path, ".", fixed = TRUE)), n = -1), collapse = ".")
+  base <- paste(utils::head(unlist(strsplit(path, ".", fixed = TRUE)), n = -1), collapse = ".")
   # list files in directory which start with the filename (without extension)
   related <- list.files(dirname(base), full.names = TRUE, pattern = basename(base))
 
@@ -221,6 +227,7 @@ get.metadata <- function(path) {
   }
   return(result)
 }
+
 
 # methods we hijack
 # NOTE: the fullest solution would be to actually take over the namespaces
@@ -272,11 +279,12 @@ get.metadata <- function(path) {
 }
 
 #' Replace methods in global namespace with the spying methods defined below
+#' @param methods These are names of functions to replace.
 .replace.methods.with.spy <- function(methods) {
   # NOTE: google searches reveal that questions and answers are sadly conflating some terms
   # as.environment("package:PKGNAME") returns a namespace of exported values
   # getNamespace("PKGNAME") returns a namespace of all package contents
-  this.ns <- getNamespace(packageName())
+  this.ns <- getNamespace(utils::packageName())
   for (method in methods) {
     spy.method <- get(sprintf(".spy.on.%s", method), env = this.ns)
     assign(method, spy.method, envir = globalenv())

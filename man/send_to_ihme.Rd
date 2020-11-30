@@ -13,7 +13,7 @@ send_to_ihme(session, filename, overwrite = TRUE, data_configuration = NULL)
 
 \item{overwrite}{Whether it is OK to overwrite the destination file.}
 
-\item{local_directory}{Where to put that file on the local machine.}
+\item{data_configuration}{Where to put that file on the local machine.}
 }
 \description{
 Responsible for moving files within a certain set of remote

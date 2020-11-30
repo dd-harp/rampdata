@@ -6,11 +6,15 @@
 \usage{
 .get.shp.metadata(path)
 }
-\description{
+\value{
+A list of properties of that data, taken from the file.
+
 A "shapefile" is actually a collection of files. At minimum .shp, .shpx, and .dbf
-}
-\details{
+
 In addition, there are at least 13 optional files that may be included.
 
 https://en.wikipedia.org/wiki/Shapefile#Overview
+}
+\description{
+Return extra metadata associated with .shp file
 }

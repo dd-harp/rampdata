@@ -17,6 +17,9 @@ local_path <- function(file_id, config = NULL) {
 
 
 #' Get the configuration file and store as package global.
+#' @param key The name of the section.
+#' @param builder A function that creates a config. It takes no arguments.
+#' @return A list of configuration values.
 cached_config <- function(key, builder) {
   config <- .rampdata.config[[key]]
   if (is.null(config)) {
