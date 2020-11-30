@@ -6,6 +6,9 @@
 \usage{
 .get.shp.metadata(path)
 }
+\arguments{
+\item{path}{The path to the shapefile.}
+}
 \value{
 A list of properties of that data, taken from the file.
 
