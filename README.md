@@ -1,3 +1,7 @@
+  <!-- badges: start -->
+  [![R build status](https://github.com/dd-harp/rampdata/workflows/R-CMD-check/badge.svg)](https://github.com/dd-harp/rampdata/actions)
+  <!-- badges: end -->
+
 # RAMPDATA
 
 Reads RAMP project data from an archive.

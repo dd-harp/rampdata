@@ -16,13 +16,12 @@ utils::globalVariables("data_config", package = "rampdata")
 #'   to create a \code{Test} section to use for non-destructive testing.
 #' @return A list of configuration parameters.
 #'
-#' @examples
-#' \dontrun{
+#' ```
 #' [Default]
 #' SCPHOST = computer-name.ihme.uw.edu
 #' SCPHOSTBASE = /path/to/data/directory
 #' LOCALDATA = /home/username/data
-#' }
+#' ```
 #'
 #' @export
 data_configuration <- function(section = "Default") {
