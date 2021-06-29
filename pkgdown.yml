@@ -1,0 +1,9 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  example_application: example_application.html
+  path_scenario: path_scenario.html
+  ramp_example: ramp_example.html
+last_built: 2021-06-29T20:07Z
+
