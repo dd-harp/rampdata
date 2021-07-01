@@ -6,6 +6,8 @@
 
 Reads RAMP project data from an archive.
 
+Documentation: https://dd-harp.github.io/globalrc/
+
 Install the 7zip tool by hand.
 
 ```
