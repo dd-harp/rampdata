@@ -87,6 +87,9 @@ prov.input.file <- function(input, role) {
   md$role <- paste(as.character(role), collapse = " ")
   calls <- sys.calls()
   md$stack <- sys_calls_to_string(calls[1:(length(calls) - 1)])
+  if (file.exists(input)) {
+    md$sha256 <- as.character(openssl::sha256(file(input)))
+  }
   .append.input.file(md)
 }
 
@@ -100,6 +103,9 @@ prov.output.file <- function(output, role) {
   md$role <- paste(as.character(role), collapse = " ")
   calls <- sys.calls()
   md$stack <- sys_calls_to_string(calls[1:(length(calls) - 1)])
+  if (file.exists(output)) {
+    md$sha256 <- as.character(openssl::sha256(file(output)))
+  }
   .append.output.file(md)
 }
 
@@ -113,9 +119,13 @@ toml_quoting <- function(value) {
   if (is.numeric(value)) {
     value
   } else if (is.list(value) & "POSIXlt" %in% class(value)) {
-    strftime(value, format = "%Y-%m-%dT%H:%M:%S%z")
+    strftime(value, format = "%Y-%m-%dT%H:%M:%S")
   } else {
-    paste("\"", value, "\"", sep = "", collapse = "")
+    if (grepl("\n", value, fixed = TRUE)) {
+      paste("'''", value, "'''", sep = "", collapse = "")
+    } else {
+      paste("'", value, "'", sep = "", collapse = "")
+    }
   }
 }
 
@@ -124,7 +134,7 @@ write_provenance_section <- function(section_name, artifact_list, connection) {
   writeLines(paste("[", section_name, "]", sep = "", collapse = ""), con = connection)
   for (name in names(artifact_list)) {
     input <- artifact_list[[name]]
-    writeLines(paste("  [", name, "]", sep = ""), con = connection)
+    writeLines(paste("  [", section_name, ".", name, "]", sep = ""), con = connection)
     for (key in names(input)) {
       value <- input[[key]]
       if (single_toml_item(value)) {
@@ -158,6 +168,13 @@ write.meta.data <- function(path) {
     message(paste("Cannot write metadata to", path))
     return
   }
+  app_meta <- list(runtime = list(
+    commandline_arguments = commandArgs(),
+    rversion = getRversion(),
+    user = unname(Sys.info()["user"]),
+    node = unname(Sys.info()["nodename"])
+  ))
+  write_provenance_section("application", app_meta, file_connection)
   write_provenance_section("inputs", get.input.files(), file_connection)
   write_provenance_section("outputs", get.output.files(), file_connection)
   writeLines("", con = file_connection)
